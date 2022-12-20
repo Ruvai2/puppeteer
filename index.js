@@ -37,7 +37,7 @@ app.get("/api", async (req, res) => {
     // console.log(barSellPrice)
     // res.send(barSellPrice);
 
-    res.send(await page.title() + "!!!");
+    res.send(await page.title());
   } catch (err) {
     console.error(err);
     return null;
