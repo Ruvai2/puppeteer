@@ -32,14 +32,15 @@ app.get("/", async (req, res) => {
     // await page.goto("https://77-house.com");
     await page.goto("https://ทองคําราคา.com");
     // const URL = "https://www.goldtraders.or.th/default.aspx";
-    
+
     //Assign Value
-    // barSell = await page.waitForSelector("#DetailPlace_uc_goldprices1_lblBLSell");
-    // barSellPrice = await page.evaluate((barSell) => barSell.textContent, barSell);
+    barSell = await page.waitForSelector(".em.bg-em.g-u")[0]
+    barSellPrice = await page.evaluate((barSell) => barSell.textContent, barSell)
     // console.log(barSellPrice)
     // res.send(barSellPrice);
 
-    res.send(await page.title());
+    // res.send(await page.title());
+    res.send(await barSellPrice);
   } catch (err) {
     console.error(err);
     return null;
