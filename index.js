@@ -28,7 +28,8 @@ app.get("/", async (req, res) => {
 
     let page = await browser.newPage();
     // await page.goto("https://www.google.com");
-    await page.goto("https://www.goldtraders.or.th/default.aspx");
+    // await page.goto("https://www.goldtraders.or.th/default.aspx");
+    await page.goto("https://77-house.com");
     // const URL = "https://www.goldtraders.or.th/default.aspx";
     
     //Assign Value
