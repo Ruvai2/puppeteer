@@ -27,8 +27,16 @@ app.get("/api", async (req, res) => {
     let browser = await puppeteer.launch(options);
 
     let page = await browser.newPage();
-    await page.goto("https://www.google.com");
-    res.send(await page.title());
+    // await page.goto("https://www.google.com");
+    const URL = "https://www.goldtraders.or.th/default.aspx";
+    await page.goto(URL);
+    //Assign Value
+    barSell = await page.waitForSelector("#DetailPlace_uc_goldprices1_lblBLSell");
+    barSellPrice = await page.evaluate((barSell) => barSell.textContent, barSell);
+    // console.log(barSellPrice)
+    res.send(barSellPrice);
+
+    // res.send(await page.title());
   } catch (err) {
     console.error(err);
     return null;
