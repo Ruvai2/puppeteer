@@ -29,7 +29,6 @@ app.get("/api", async (req, res) => {
     let page = await browser.newPage();
     await page.goto("https://www.google.com");
     // const URL = "https://www.goldtraders.or.th/default.aspx";
-    await page.goto(URL);
     
     //Assign Value
     // barSell = await page.waitForSelector("#DetailPlace_uc_goldprices1_lblBLSell");
