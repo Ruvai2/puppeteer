@@ -31,12 +31,12 @@ app.get("/api", async (req, res) => {
     const URL = "https://www.goldtraders.or.th/default.aspx";
     await page.goto(URL);
     //Assign Value
-    barSell = await page.waitForSelector("#DetailPlace_uc_goldprices1_lblBLSell");
-    barSellPrice = await page.evaluate((barSell) => barSell.textContent, barSell);
+    // barSell = await page.waitForSelector("#DetailPlace_uc_goldprices1_lblBLSell");
+    // barSellPrice = await page.evaluate((barSell) => barSell.textContent, barSell);
     // console.log(barSellPrice)
-    res.send(barSellPrice);
+    // res.send(barSellPrice);
 
-    // res.send(await page.title());
+    res.send(await page.title());
   } catch (err) {
     console.error(err);
     return null;
