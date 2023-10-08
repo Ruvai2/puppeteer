@@ -4,54 +4,49 @@ let chrome = {};
 let puppeteer;
 
 if (process.env.AWS_LAMBDA_FUNCTION_VERSION) {
-  chrome = require("chrome-aws-lambda");
-  puppeteer = require("puppeteer-core");
+    chrome = require("chrome-aws-lambda");
+    puppeteer = require("puppeteer-core");
 } else {
-  puppeteer = require("puppeteer");
+    puppeteer = require("puppeteer");
 }
 
-app.get("/", async (req, res) => {
-  let options = {};
+app.get("/scrape", async (req, res) => {
+    const targetURL = req.query.url;
 
-  if (process.env.AWS_LAMBDA_FUNCTION_VERSION) {
-    options = {
-      args: [...chrome.args, "--hide-scrollbars", "--disable-web-security"],
-      defaultViewport: chrome.defaultViewport,
-      executablePath: await chrome.executablePath,
-      headless: true,
-      ignoreHTTPSErrors: true,
-    };
-  }
+    if (!targetURL) {
+        return res.status(400).send("URL parameter is required.");
+    }
 
-  try {
-    let browser = await puppeteer.launch(options);
+    let options = {};
 
-    let page = await browser.newPage();
-    // await page.goto("https://www.google.com");
-    // await page.goto("https://www.goldtraders.or.th/default.aspx");
-    // await page.goto("https://77-house.com");
-    await page.goto("https://ทองคําราคา.com");
-    // const URL = "https://www.goldtraders.or.th/default.aspx";
+    if (process.env.AWS_LAMBDA_FUNCTION_VERSION) {
+        options = {
+            args: [...chrome.args, "--hide-scrollbars", "--disable-web-security"],
+            defaultViewport: chrome.defaultViewport,
+            executablePath: await chrome.executablePath,
+            headless: true,
+            ignoreHTTPSErrors: true,
+        };
+    }
 
-    //Assign Value
-    // barSell = await page.waitForSelector(".em.bg-em.g-u")[0]
-    // barSell = await page.waitForSelector("#rightCol table .em:nth-child(4)")
-    barSell = await page.waitForSelector("#rightCol .trline:nth-child(2) .em")
-    barSellPrice = await page.evaluate((barSell) => barSell.textContent, barSell)
-    // console.log(barSellPrice)
-    // res.send(barSellPrice);
+    try {
+        const browser = await puppeteer.launch(options);
+        const page = await browser.newPage();
+        await page.goto(targetURL, { waitUntil: 'networkidle2' });
 
-    // res.send(await page.title());
-    // red.send(await page.evaluate((barSell) => barSell.textContent, barSell))
-    res.send(await barSellPrice);
-  } catch (err) {
-    console.error(err);
-    return null;
-  }
+        const pageHTML = await page.content();
+
+        await browser.close();
+
+        res.send(pageHTML);
+    } catch (err) {
+        console.error(err);
+        res.status(500).send("An error occurred while scraping the website.");
+    }
 });
 
 app.listen(process.env.PORT || 3000, () => {
-  console.log("Server started");
+    console.log("Server started");
 });
 
 module.exports = app;
